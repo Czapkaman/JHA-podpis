@@ -118,27 +118,18 @@ unsigned long long int fast_mod(unsigned long int a, unsigned long long int b, u
 	return fast_mod(a, b, mod, n);
 }
 
-unsigned long int value_of_text(vector<char> &vec)
-{
-	unsigned long int temp = 0;
-	for (auto& c : vec)
-	{
-		if (c == 32) 
-			temp += 42;
-		else 
-			temp += static_cast<unsigned long int>(c);
-	}
-	return temp;
-}
-
 int main()
 {
-	long float p, g, k, r;
+	long int p, g, k, r;
 	long int q = 0, n1 = 0, n2 = 0, sp = 0;
 	long int gk, jha;
 	vector<char> Text;
 	if (Read(Text, "text.txt"))
+	{
+		cout << "Nie można otworzyć pliku 'text.txt'.\n";
 		return 1;
+	}
+		
 	PrintVecChar(Text);
 	cin >> p;
 	if (!is_prime(p))
@@ -158,17 +149,26 @@ int main()
 			n2++;
 	}
 	if (7 * n1 - 3 * n2 + sp * sp < 0)
-		jha = fast_mod((p + 1)/q, (7 * n1 - 3 * n2 + sp * sp) * -1, p);
+	{
+		unsigned int b = 1;
+		while ((q*b)%p != 1)
+			b++;
+		jha = fast_mod(b, (7 * n1 - 3 * n2 + sp * sp) * -1, p);
+	}
 	else
 		jha = fast_mod(q, 7 * n1 - 3 * n2 + sp * sp, p);
+	cout << "q: " << q << endl;
 	cout << "JHA: " << jha << endl;
 	cin >> g;
 	cin >> k;
 	cin >> r;
+	unsigned int b = 1;
+	while ((r*b) % q != 1)
+		b++;
 	cout << "---PRK---" << endl;
 	gk = fast_mod(g, k, p);
 	cout << "(" << gk << ", " << g << ", " << p << ", " << q << ")\t";
-	cout << "(" << gk % q << ", " << ((value_of_text(Text) + gk % q) % q) << ")" << endl;
+	cout << "(" << gk % q << ", " << (b%q) *(jha + gk * k)% q << ")" << endl;
 
 	cin >> q;
 	return 0;
